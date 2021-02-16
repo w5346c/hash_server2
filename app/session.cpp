@@ -55,6 +55,8 @@ void Session::ReadAsync()
 
 void Session::WriteAsync()
 {
+    m_writeInProgress = true;
+
     io::async_write(m_socket, m_writeBuf,
         std::bind(&Session::OnWriteCompleted, shared_from_this(), _1, _2));
 }
@@ -81,15 +83,27 @@ void Session::OnDataReceived(error_code error, size_t len)
     std::iostream stream(&m_writeBuf);
     stream << std::hex << hash << "\n";
 
-    WriteAsync();
+    if (!m_writeInProgress)
+    {
+        WriteAsync();
+    }
+
     ReadAsync();
 }
 
 void Session::OnWriteCompleted(boost::system::error_code error, std::size_t len)
 {
+    m_writeInProgress = false;
+
     if (error)
     {
         std::cout << "Session::OnWriteCompleted() failed, error: " << error.message() << std::endl;
+        return;
+    }
+
+    if (m_writeBuf.size() > 0)
+    {
+        WriteAsync();
     }
 }
 
