@@ -89,7 +89,7 @@ void Session::OnWriteCompleted(boost::system::error_code error, std::size_t len)
 {
     if (error)
     {
-        std::cout << "Session::OnDataReceived() failed, error: " << error.message() << std::endl;
+        std::cout << "Session::OnWriteCompleted() failed, error: " << error.message() << std::endl;
     }
 }
 
