@@ -28,8 +28,6 @@ private:
     boost::asio::ip::tcp::socket m_socket;
     boost::asio::streambuf m_readBuf;
     boost::asio::streambuf m_writeBuf;
-
-    bool m_writeInProgress{};
 };
 
 } // namespace hash_server
